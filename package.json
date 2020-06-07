@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "build:ui": "rm -rf build && cd ../fullstackopen/react-puhelinluettelo && npm run build && cp -r build ../../fullstackopen-part3/",
-    "deploy": "git push heroku master",
+    "deploy": "git push heroku part-3-3:master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
     "logs:prod": "heroku logs -t",
     "dev": "nodemon index.js",
