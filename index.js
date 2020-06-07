@@ -68,31 +68,21 @@ app.post('/api/persons', (req, res) => {
     })
   }
 
-  if (contacts.filter(contact => contact.name === body.name).length) {
-    return res.status(400).json({
-      error: 'name must be unique'
-    })
-  }
-
-  const newContact = {
+  const person = new Person({
     "name": body.name,
     "number": body.number,
     "id": randomId(999)
-  }
-  // console.log('add contact', newContact)
-  contacts = contacts.concat(newContact)
+  })
 
-  res.json(newContact)
+  person.save().then(savedPerson => {
+    res.json(savedPerson)
+  })
 })
 
 app.get('/api/persons', (req, res) => {
   Person.find({})
     .then(contacts => {
       res.json(contacts.map(contact => contact.toJSON()))
-    })
-    .catch(error => {
-      console.log(error)
-      res.status(404).end()
     })
 })
 
