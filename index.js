@@ -36,12 +36,6 @@ app.post('/api/persons', (req, res, next) => {
   const body = req.body
   // console.log(body)
 
-  if (!body.name || !body.number) {
-    return res.status(400).json({
-      error: 'required fields missing'
-    })
-  }
-
   const person = new Person({
     "name": body.name,
     "number": body.number,
@@ -82,7 +76,7 @@ app.put('/api/persons/:id', (req, res, next) => {
     number: body.number,
   }
 
-  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+  Person.findByIdAndUpdate(req.params.id, person, { runValidators: true, context: 'query', new: true })
     .then(updatedPerson => {
       res.json(updatedPerson.toJSON())
     })
