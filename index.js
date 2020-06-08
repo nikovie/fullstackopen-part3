@@ -16,39 +16,13 @@ morgan.token('body', function (req, res) {
 })
 app.use(morgan(':method :url :status :response-time ms :body'))
 
-let contacts = [
-  {
-    "name": "Arto Hellas",
-    "number": "040-123456",
-    "id": 1
-  },
-  {
-    "name": "Ada Lovelace",
-    "number": "39-44-5323523",
-    "id": 2
-  },
-  {
-    "name": "Dan Abramov",
-    "number": "12-43-234345",
-    "id": 3
-  },
-  {
-    "name": "Mary Poppendieck",
-    "number": "39-23-6423122",
-    "id": 4
-  },
-  {
-    "name": "Fake Name",
-    "number": "091233321",
-    "id": 5
-  }
-]
-
 app.get('/', (req, res) => {
   res.send('<h1>Nothing here</h1>')
 })
 
-app.get('/info', (req, res) => {
+app.get('/info', async (req, res) => {
+  const contacts = await Person.find({})
+
   res.send(`
     <p>Phonebook has info for ${contacts.length} people</p>
     <p>${new Date}</p>
@@ -99,6 +73,22 @@ app.get('/api/persons/:id', (req, res, next) => {
     })
     .catch(error => next(error))
 })
+
+app.put('/api/persons/:id', (req, res, next) => {
+  const body = req.body
+  // console.log(body)
+
+  const person = {
+    number: body.number,
+  }
+
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then(updatedPerson => {
+      res.json(updatedPerson.toJSON())
+    })
+    .catch(error => next(error))
+})
+
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
